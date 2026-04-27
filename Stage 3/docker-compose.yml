@@ -36,4 +36,8 @@ services:
       - nginx
     environment:
       - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+
+networks:
+  hng-network:
+    driver: bridge
       
