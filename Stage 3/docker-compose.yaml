@@ -1,0 +1,36 @@
+version: "3.9"
+
+volumes:
+  HNG-nginx-logs:        # Docker owns this — shared filing cabinet
+
+services:
+
+  nextcloud:
+    image: kefaslungu/hng-nextcloud
+    restart: unless-stopped
+    volumes:
+      - HNG-nginx-logs:/var/log/nginx:ro   # read-only — Nextcloud can inspect logs but not write them
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - HNG-nginx-logs:/var/log/nginx      # read-write — Nginx is the only writer
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - nextcloud
+
+  detector:
+    build: ./detector
+    restart: unless-stopped
+    network_mode: host                     # needs host network to run iptables
+    cap_add:
+      - NET_ADMIN                          # grants iptables permission
+    volumes:
+      - HNG-nginx-logs:/var/log/nginx:ro   # read-only — daemon only reads
+      - ./detector/config.yaml:/app/config.yaml:ro
+    depends_on:
+      - nginx
