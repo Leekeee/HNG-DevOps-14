@@ -36,8 +36,6 @@ services:
     volumes:
       - HNG-nginx-logs:/var/log/nginx:ro   # read-only — daemon only reads
       - ./detector/config.yaml:/app/config.yaml:ro
-    networks:
-      - hng-network
     depends_on:
       - nginx
     environment:
