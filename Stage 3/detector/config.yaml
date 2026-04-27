@@ -1,0 +1,14 @@
+monitor:
+  log_path: /var/log/nginx/hng-access.log
+  poll_interval: 0.2
+
+baseline:
+  window_size: 300
+  z_score_threshold: 3
+
+blocker:
+  ban_durations: [60, 300, 900, 3600]
+
+dashboard:
+  host: 0.0.0.0
+  port: 8000
