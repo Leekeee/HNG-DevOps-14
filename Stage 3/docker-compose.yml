@@ -34,3 +34,6 @@ services:
       - ./detector/config.yaml:/app/config.yaml:ro
     depends_on:
       - nginx
+    environment:
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+      
