@@ -10,6 +10,8 @@ services:
     restart: unless-stopped
     volumes:
       - HNG-nginx-logs:/var/log/nginx:ro   # read-only — Nextcloud can inspect logs but not write them
+    networks:
+      - hng-network
 
   nginx:
     image: nginx:alpine
@@ -20,6 +22,8 @@ services:
     volumes:
       - HNG-nginx-logs:/var/log/nginx      # read-write — Nginx is the only writer
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - hng-network
     depends_on:
       - nextcloud
 
@@ -32,6 +36,8 @@ services:
     volumes:
       - HNG-nginx-logs:/var/log/nginx:ro   # read-only — daemon only reads
       - ./detector/config.yaml:/app/config.yaml:ro
+    networks:
+      - hng-network
     depends_on:
       - nginx
     environment:
