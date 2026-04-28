@@ -1,8 +1,9 @@
 import subprocess
+import audit
 
 BLOCKED_IPS = set()
 
-def block(source_ip):
+def block(source_ip, condition, current_rate, baseline_mean):
     if source_ip in BLOCKED_IPS:
         return
     
@@ -12,7 +13,14 @@ def block(source_ip):
         "-s", source_ip,
         "-j", "DROP"
     ])
-    print(f"Blocked IP: {source_ip}")
+    
+    audit.log(
+        "BAN",
+        ip=source_ip,
+        condition=condition,
+        rate=current_rate,
+        baseline=baseline_mean
+    )
 
 def unblock(source_ip):
     if source_ip not in BLOCKED_IPS:
@@ -24,4 +32,3 @@ def unblock(source_ip):
         "-s", source_ip,
         "-j", "DROP"
     ])
-    print(f"Unblocked IP: {source_ip}")
