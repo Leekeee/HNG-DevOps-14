@@ -133,4 +133,35 @@ def is_anomalous_ip(source_ip):
     
     if z_score > Z_SCORE_THRESHOLD:
         return True, f"z_score={z_score:.2f}"
-    if rate_multiplier > RATE_M
+    if rate_multiplier > RATE_MULTIPLIER:
+        return True, f"rate={rate_multiplier:.2f}x_baseline"
+    
+    return False, None
+
+
+def is_anomalous_global():
+    if len(global_window) < 10:
+        return False, None
+    
+    mean, std = get_global_baseline()
+    current_rate = get_current_rate(global_window)
+    
+    z_score = (current_rate - mean) / std if std > 0 else 0
+    rate_multiplier = current_rate / mean if mean > 0 else 0
+    
+    if z_score > Z_SCORE_THRESHOLD:
+        return True, f"z_score={z_score:.2f}"
+    if rate_multiplier > RATE_MULTIPLIER:
+        return True, f"rate={rate_multiplier:.2f}x_baseline"
+    
+    return False, None
+
+
+def is_error_surge(source_ip):
+    if len(ip_error_windows[source_ip]) < 5:
+        return False
+    
+    mean, std = get_error_baseline(source_ip)
+    current_error_rate = get_current_rate(ip_error_windows[source_ip])
+    
+    return current_error_rate > (mean * 3)
