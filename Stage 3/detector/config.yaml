@@ -3,12 +3,28 @@ monitor:
   poll_interval: 0.2
 
 baseline:
-  window_size: 300
-  z_score_threshold: 3
+  window_seconds: 60
+  baseline_window: 1800
+  recalc_interval: 60
+  min_data_points: 60
+  floor_mean: 1.0
+  floor_std: 0.5
+
+detection:
+  z_score_threshold: 3.0
+  rate_multiplier: 5.0
+  error_surge_multiplier: 3.0
 
 blocker:
-  ban_durations: [60, 300, 900, 3600]
+  ban_durations: [600, 1800, 7200]
 
 dashboard:
   host: 0.0.0.0
   port: 8000
+  refresh_seconds: 3
+
+slack:
+  webhook_url_env: SLACK_WEBHOOK_URL
+
+audit:
+  log_path: /app/audit.log
