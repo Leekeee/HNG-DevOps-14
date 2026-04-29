@@ -152,6 +152,10 @@ def _get_baseline(cached, rolling_window, hourly_data):
     cached["std"]       = std
     cached["last_calc"] = now
 
+     # Record history for dashboard graph
+    if cached is _cached_baseline:  # Only track global baseline
+        record_baseline_history(mean)
+
     return mean, std
 
 
