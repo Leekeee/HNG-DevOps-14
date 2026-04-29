@@ -127,3 +127,70 @@ def status():
         "memory_percent": psutil.virtual_memory().percent,
         "top_ips": get_top_ips()
     }
+
+@app.get("/baseline-history", response_class=HTMLResponse)
+def baseline_history():
+    history = baseline.baseline_history
+    
+    if not history:
+        return "<html><body><p>No baseline data yet — wait a few minutes.</p></body></html>"
+    
+    times  = [h["time"] for h in history]
+    means  = [h["mean"] for h in history]
+    
+    times_js = str(times)
+    means_js = str(means)
+    
+    return f"""
+    <html>
+    <head>
+        <title>Baseline History</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+        <meta http-equiv="refresh" content="60">
+        <style>
+            body {{ background: #0d1117; color: #c9d1d9; font-family: monospace; padding: 20px; }}
+            h1 {{ color: #58a6ff; }}
+        </style>
+    </head>
+    <body>
+        <h1>Baseline Mean Over Time</h1>
+        <p>Updates every 60 seconds. Each point = one baseline recalculation.</p>
+        <canvas id="chart" width="900" height="400"></canvas>
+        <script>
+            const ctx = document.getElementById('chart').getContext('2d');
+            new Chart(ctx, {{
+                type: 'line',
+                data: {{
+                    labels: {times_js},
+                    datasets: [{{
+                        label: 'Effective Mean (req/s)',
+                        data: {means_js},
+                        borderColor: '#58a6ff',
+                        backgroundColor: 'rgba(88,166,255,0.1)',
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        tension: 0.3
+                    }}]
+                }},
+                options: {{
+                    responsive: true,
+                    scales: {{
+                        y: {{
+                            beginAtZero: true,
+                            ticks: {{ color: '#8b949e' }},
+                            grid: {{ color: '#21262d' }}
+                        }},
+                        x: {{
+                            ticks: {{ color: '#8b949e', maxTicksLimit: 15 }},
+                            grid: {{ color: '#21262d' }}
+                        }}
+                    }},
+                    plugins: {{
+                        legend: {{ labels: {{ color: '#c9d1d9' }} }}
+                    }}
+                }}
+            }});
+        </script>
+    </body>
+    </html>
+    """
