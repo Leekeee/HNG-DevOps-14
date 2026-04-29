@@ -88,27 +88,31 @@ sudo ufw allow 8000/tcp
 ```
 
 ## Repository Structure
-Stage 3/
-├── docker-compose.yml
-├── nginx/
-│   └── nginx.conf
-├── Detector/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   ├── config.yaml
-│   ├── main.py
-│   ├── monitor.py
-│   ├── baseline.py
-│   ├── detector.py
-│   ├── blocker.py
-│   ├── unbanner.py
-│   ├── notifier.py
-│   ├── dashboard.py
-│   └── audit.py
-├── docs/
-│   └── architecture.png
-├── screenshots/
-└── README.md
+
+```
+HNG-DevOps-14/
+└── Stage 3/
+    ├── docker-compose.yml
+    ├── README.md
+    ├── nginx/
+    │   └── nginx.conf
+    ├── Detector/
+    │   ├── Dockerfile
+    │   ├── requirements.txt
+    │   ├── config.yaml
+    │   ├── main.py
+    │   ├── monitor.py
+    │   ├── baseline.py
+    │   ├── detector.py
+    │   ├── blocker.py
+    │   ├── unbanner.py
+    │   ├── notifier.py
+    │   ├── dashboard.py
+    │   └── audit.py
+    ├── docs/
+    │   └── architecture.png
+    └── screenshots/
+```
 
 ## GitHub Repository
 https://github.com/Leekeee/HNG-DevOps-14
