@@ -260,3 +260,15 @@ def get_error_baseline(source_ip):
         error_baseline_windows[source_ip],
         defaultdict(list)
     )
+
+
+# Baseline history — stores (timestamp, mean) tuples for graphing
+baseline_history = []
+
+def record_baseline_history(mean):
+    """Called every time baseline is recalculated. Stores up to 120 data points."""
+    now = time.strftime("%H:%M:%S", time.localtime())
+    baseline_history.append({"time": now, "mean": round(mean, 2)})
+    if len(baseline_history) > 120:
+        baseline_history.pop(0)
+
